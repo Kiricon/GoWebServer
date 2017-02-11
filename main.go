@@ -6,10 +6,11 @@ import (
 	"net/http"
 )
 
-func loadPage(title string) string {
+func loadPage(w http.ResponseWriter, title string) {
 	filename := title + ".html"
 	body, _ := ioutil.ReadFile(filename)
-	return string(body)
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	fmt.Fprintf(w, string(body))
 }
 
 func viewHandler(w http.ResponseWriter, r *http.Request) {
@@ -18,9 +19,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func mainHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	fmt.Fprintf(w, loadPage("index"))
-	fmt.Println(r.Method, r.RequestURI)
+	loadPage(w, "index")
 }
 
 func main() {
