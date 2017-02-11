@@ -2,8 +2,15 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 )
+
+func loadPage(title string) string {
+	filename := title + ".html"
+	body, _ := ioutil.ReadFile(filename)
+	return string(body)
+}
 
 func viewHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
@@ -11,7 +18,8 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func mainHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Main Handler")
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	fmt.Fprintf(w, loadPage("index"))
 	fmt.Println(r.Method, r.RequestURI)
 }
 
